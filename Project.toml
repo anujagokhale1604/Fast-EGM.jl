@@ -1,0 +1,14 @@
+name = "FastEGM"
+uuid = "b7a2d480-1a2b-4e8c-9a11-5f6e7c8d9e0f"
+version = "0.1.0"
+authors = ["Anuja Gokhale <anujagokhale1604@gmail.com>"]
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[compat]
+BenchmarkTools = "1.8.0"
+LinearAlgebra = "1.13.0"
+Test = "1.11.0"
