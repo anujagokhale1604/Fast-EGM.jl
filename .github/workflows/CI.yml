@@ -24,5 +24,4 @@ jobs:
         with:
           version: ${{ matrix.version }}
       - uses: julia-actions/cache@v2
-      - name: Run tests
-        run: julia --project=. -e 'using Pkg; Pkg.test()'
+      - uses: julia-actions/julia-runtest@v1

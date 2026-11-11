@@ -1,7 +1,6 @@
 module FastEGM
 
 using BenchmarkTools
-using LinearAlgebra
 
 export ModelParams, EGMWorkspace, egm_step!, solve_steady_state!, evaluate_euler_errors
 
