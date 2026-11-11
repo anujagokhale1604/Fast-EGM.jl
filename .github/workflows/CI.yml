@@ -15,19 +15,10 @@ jobs:
       matrix:
         version:
           - '1.11'
-    env:
-      JULIA_PKG_SERVER: ""
+          - '1'
     steps:
       - uses: actions/checkout@v4
       - uses: julia-actions/setup-julia@v2
         with:
           version: ${{ matrix.version }}
-      - name: Install Dependencies and Run Tests
-        run: |
-          julia -e '
-            using Pkg
-            Pkg.Registry.add("General")
-            Pkg.activate(".")
-            Pkg.add("BenchmarkTools")
-            include("test/runtests.jl")
-          '
+      - uses: julia-actions/julia-runtest@v1
