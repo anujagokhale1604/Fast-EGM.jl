@@ -1,8 +1,6 @@
 using Test
 using BenchmarkTools
-
-include("../src/FastEGM.jl")
-using .FastEGM
+using FastEGM
 
 @testset "FastEGM Package Tests" begin
     p = ModelParams(Na=250, Ny=3)
@@ -34,4 +32,26 @@ using .FastEGM
     trial = @benchmark egm_step!($ws, $c_current, $p) samples=500 evals=1
     println("Allocated memory per step: ", trial.allocs, " allocations (", trial.memory, " bytes)")
     @test trial.allocs == 0
+
+    # Test 5: Young (2010) Stationary Distribution
+    @testset "Young (2010) Stationary Distribution" begin
+        D = zeros(p.Na, p.Ny)
+        dws = DistWorkspace(p.Na, p.Ny)
+
+        # Solve stationary distribution using steady-state savings policy `ws.a_new`
+        dist_iters = solve_stationary_dist!(D, dws, ws.a_new, p)
+        @test dist_iters < 10_000
+        @test isapprox(sum(D), 1.0, atol=1e-13)
+        @test all(D .>= 0.0)
+
+        # Mass & mean conservation test: E[a'] == E[a]
+        Ea_curr = aggregate_assets(D, p)
+        Ea_next = sum(D .* ws.a_new)
+        @test isapprox(Ea_curr, Ea_next, atol=1e-11)
+
+        # Zero-allocation check on forward step
+        forward_policy_step!(dws.D_next, D, dws, p) # Warm-up compilation
+        allocs = @allocated forward_policy_step!(dws.D_next, D, dws, p)
+        @test allocs == 0
+    end
 end
